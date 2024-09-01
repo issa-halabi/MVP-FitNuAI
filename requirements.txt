@@ -1,0 +1,12 @@
+numpy
+pandas
+openai
+pillow
+requests
+python-dotenv
+pyzbar
+zxing
+openfoodfacts
+fastapi
+uvicorn
+opencv-python
