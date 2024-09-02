@@ -33,10 +33,12 @@ def get_food_image_base64(food: str) -> str:
         with open(f'./data/images/{food}.jpg', 'rb') as image_file:
             return base64.b64encode(image_file.read()).decode('utf-8')
     except FileNotFoundError:
-        raise FileNotFoundError(f'Image for {food} not found')
+        print(f'Image for {food} not found')
+        return 'Image not found'
     except Exception as e:
         print(f'Error getting image for {food}: {e}')
-        return ''
+        return 'Image not found'
+
 
 
 def get_unique_dishes(data: pd.DataFrame=None) -> list[str]:
