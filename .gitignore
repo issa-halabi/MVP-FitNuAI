@@ -5,6 +5,7 @@ scraped/
 plan.md
 model_log.csv
 *.h5
+images
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

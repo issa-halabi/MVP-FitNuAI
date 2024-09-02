@@ -88,17 +88,6 @@
   "proteins": 2.2
  },
  {
-  "food": "Carrot",
-  "food_arabic": "جزر",
-  "food_arabizi": "jazer",
-  "weight": 100,
-  "calories": 35.0,
-  "carbs": 8.24,
-  "fiber": 2.9,
-  "fats": 0.13,
-  "proteins": 0.64
- },
- {
   "food": "Banana",
   "food_arabic": "موز",
   "food_arabizi": "mouz",

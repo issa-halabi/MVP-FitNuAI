@@ -7,13 +7,28 @@ This application provides endpoints to retrieve nutrifacts for food. It support 
 - Method: GET
 - Parameters: food_name string passed as path parameter
 - Responses (with custom message):
-    - 200 OK: returns the nutritional information of the given
+    - 200 OK: returns the nutritional information of all the dishes that contain the given query in their name, along with their images
     - 404 Not Found:
         - food_name not found in database
 - Example Request:
 ```
 GET /food_name/apple
 ```
+
+Example Response:
+```
+{
+    "food":"apple",
+    "weight":100,
+    "calories":279,
+    "carbs":70,
+    "fat":0,
+    "protein":0,
+    "fiber":0,
+    "image":"/9j/4AAQSkZJRgABAQAAA..."
+}
+```
+
 
 **2. Get nutrition facts by food image:**
 - Endpoint path: "/food_image/"
@@ -52,8 +67,12 @@ GET /food_name/apple
 ```
 {
     "food":"jelly",
-    "size":100,
-    "calories":279
+    "weight":100,
+    "calories":279,
+    "carbs":70,
+    "fat":0,
+    "protein":0,
+    "fiber":0
 }
 ```
 
@@ -112,6 +131,8 @@ pip install -r requirements.txt
 OPENAI_API_KEY="your_api_key"
 ```
 
-4- Run [app.py](./app.py) file in your IDE, or run ```python app.py``` in your command line
+4- Unzip the images folder
 
-5- Upload an image of your food. If you want a more precise answer, insert also its weight.
+5- Run [app.py](./app.py) file in your IDE, or run ```python app.py``` in your command line
+
+6- Upload an image of your food. If you want a more precise answer, insert also its weight.

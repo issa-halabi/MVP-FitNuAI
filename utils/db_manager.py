@@ -1,4 +1,5 @@
 import pandas as pd
+import base64
 
 
 def get_data_for_gpt() -> pd.DataFrame:
@@ -22,6 +23,20 @@ def get_all_data() -> pd.DataFrame:
     df = df1
     df['food'] = df['food'].apply(lambda x: x.lower())
     return df
+
+
+def get_food_image_base64(food: str) -> str:
+    """
+    This function returns the image of the food in base64 format.
+    """
+    try:
+        with open(f'./data/images/{food}.jpg', 'rb') as image_file:
+            return base64.b64encode(image_file.read()).decode('utf-8')
+    except FileNotFoundError:
+        raise FileNotFoundError(f'Image for {food} not found')
+    except Exception as e:
+        print(f'Error getting image for {food}: {e}')
+        return ''
 
 
 def get_unique_dishes(data: pd.DataFrame=None) -> list[str]:
@@ -74,6 +89,7 @@ def search_foods(food: str, data: pd.DataFrame=None) -> dict:
     food_info = pd.DataFrame()
     for column in food_columns:
         curr_food_info = data[data[column].str.contains(food, case=False, na=False)]
+        curr_food_info['image'] = curr_food_info['food'].apply(get_food_image_base64)
         food_info = pd.concat([food_info, curr_food_info], ignore_index=True)
     food_info = food_info.drop_duplicates()
     food_info.drop(columns=['food_arabic', 'food_arabizi'], inplace=True)

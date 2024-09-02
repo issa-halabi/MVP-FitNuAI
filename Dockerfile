@@ -17,6 +17,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       python3-tk && \
     rm -rf /var/lib/apt/lists/*
 
+# install unzip
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    unzip
+
 # install python libraries
 COPY requirements.txt .
 RUN pip install --upgrade pip
@@ -27,6 +31,9 @@ RUN pip install -r requirements.txt
 COPY api.py /root/
 COPY utils /root/utils/
 COPY data/ /root/data/
+
+# unzip images
+RUN unzip /root/data/images.zip -d /root/data/images/
 
 # port
 EXPOSE 8000
