@@ -106,8 +106,7 @@ It includes 4 methods:
 - **parse_barcode_image_base64:** Parse a barcode image from a base64 string and return the barcode value.
 
 
-## Gradio Interface
-### App:
+### App (Gradio interface for testing):
 This is the interface, the web app part of the project. It is a basic input-output display:
 - Input: Dish Image & Food Weight
 - Output: predicted food type & number of calories, with a confidence score in the prediction
@@ -115,24 +114,36 @@ This is the interface, the web app part of the project. It is a basic input-outp
 It uses 2 additional files, for html & css
 
 
-### Use Food Recognizer
+## Usage (docker)
 1- Clone this repository
 ```
 git clone https://github.com/homanydata/Dish_Analyzer_WebApp.git
 ```
 
-2- Install necessary libraries
+2- Install & Use git LFS
+```
+brew install git-lfs
+
+git lfs install
+
+git lfs fetch
+
+git lfs checkout
+```
+
+3- Install necessary libraries
 ```
 pip install -r requirements.txt
 ```
 
-3- Create .env file, and write inside it your OPENAI_APIKEY there:
+4- Create .env file, and write inside it your OPENAI_APIKEY there:
 ```
 OPENAI_API_KEY="your_api_key"
 ```
 
-4- Unzip the images folder
+5- Build & Run the docker image
+```
+docker-compose --env-file .env up --build
+```
 
-5- Run [app.py](./app.py) file in your IDE, or run ```python app.py``` in your command line
-
-6- Upload an image of your food. If you want a more precise answer, insert also its weight.
+6- Test the API through the endpoints, at http://localhost:8000/docs
