@@ -1,10 +1,17 @@
 services:
-  nutrifacts_api:
-    container_name: nutrifacts_api
+  nutrifacts_api_ai:
+    container_name: nutrifacts_api_ai
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
     env_file:
       - .env
+    networks:
+      - app-ai-network
+      - nutri-shared-network
+
+networks:
+  app-ai-network:
+    driver: bridge
+  nutri-shared-network:
+    external: true
