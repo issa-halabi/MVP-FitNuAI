@@ -115,12 +115,7 @@ It uses 2 additional files, for html & css
 
 
 ## Usage (docker)
-1- Clone this repository
-```
-git clone https://github.com/homanydata/Dish_Analyzer_WebApp.git
-```
-
-2- Install & Use git LFS
+Install & Use git LFS
 ```
 brew install git-lfs
 
@@ -131,19 +126,14 @@ git lfs fetch
 git lfs checkout
 ```
 
-3- Install necessary libraries
-```
-pip install -r requirements.txt
-```
-
-4- Create .env file, and write inside it your OPENAI_APIKEY there:
+Create .env file, and write inside it your OPENAI_APIKEY there:
 ```
 OPENAI_API_KEY="your_api_key"
 ```
 
-5- Build & Run the docker image
+Build & Run the docker image
 ```
 docker-compose --env-file .env up --build
 ```
 
-6- Test the API through the endpoints, at http://localhost:8000/docs
+Test the API through the endpoints, at http://localhost:8000/docs
