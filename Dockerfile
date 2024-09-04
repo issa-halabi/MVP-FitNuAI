@@ -33,7 +33,7 @@ COPY utils /root/utils/
 COPY data/ /root/data/
 
 # unzip images
-RUN unzip /root/data/images.zip -d /root/data/images/
+# RUN unzip /root/data/images.zip -d /root/data/images/
 
 # port
 EXPOSE 8000
