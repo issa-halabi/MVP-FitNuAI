@@ -6,6 +6,8 @@ from PIL import Image
 import numpy as np
 import base64
 import openfoodfacts
+import requests
+
 
 
 class ScannerException(Exception):
@@ -20,10 +22,12 @@ def get_nutrition_facts(code: str) -> dict:
     """
     Get nutrition facts for a given code.
     """
-    product_data = api.product.get(code, fields=["code", "product_name", "nutriments"])
+    product_data = api.product.get(code, fields=["code", "product_name", "nutriments", "image_url"])
     if not product_data:
         raise KeyError(f"Product of code {code} not found in database.")
     nutriments = product_data['nutriments']
+    image_url = product_data.get('image_url')
+    image = get_food_image_base64(image_url)
     return {
         'food': product_data.get('product_name'),
         'weight': '100',
@@ -32,7 +36,23 @@ def get_nutrition_facts(code: str) -> dict:
         'fat': nutriments.get('fat_100g'),
         'carbohydrates': nutriments.get('carbohydrates_100g'),
         'protein': nutriments.get('proteins_100g'),
+        'image': image
     }
+
+
+def get_food_image_base64(image_url: str) -> str:
+    """
+    Get the image of the food in base64 format.
+    """
+    return ''
+    # Download the image if available
+    if image_url:
+        image_response = requests.get(image_url)
+        if image_response.status_code == 200:
+            image = image_response.content
+            image = base64.b64encode(image).decode('utf-8')
+            return image
+    return 'Image not found'
 
 
 def parse_barcode_image(image: MatLike) -> str:

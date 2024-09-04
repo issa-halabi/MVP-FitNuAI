@@ -29,6 +29,7 @@ def get_food_image_base64(food: str) -> str:
     """
     This function returns the image of the food in base64 format.
     """
+    return ''
     try:
         with open(f'./data/images/{food}.jpg', 'rb') as image_file:
             return base64.b64encode(image_file.read()).decode('utf-8')

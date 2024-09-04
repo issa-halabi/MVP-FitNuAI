@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from utils.db_manager import get_food_info, get_unique_dishes, get_all_data, get_data_for_gpt, search_foods
+from utils.db_manager import get_food_info, get_unique_dishes, get_all_data, get_data_for_gpt, search_foods, get_food_image_base64
 from utils.model import GPT_DishAnalyzer
 from utils.barcode_scanner import parse_barcode_image_base64, get_nutrition_facts, ScannerException
 
@@ -32,7 +32,10 @@ async def get_nutrifacts_from_image(request: ImageRequest):
         image_data = request.image_base64
         # ask model to recognize the food in image
         food_name = model.predict_from_base64(image_data)
+        if food_name == 'Unknown':
+            raise KeyError('Unknown or Unrecognized food')
         food_info = get_food_info(food_name, data_for_gpt)
+        food_info['image'] = get_food_image_base64(food_name)
         return food_info
     except KeyError as e:
         raise HTTPException(status_code=404, detail=str(e))
