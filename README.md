@@ -25,7 +25,7 @@ Example Response:
     "fat":0,
     "protein":0,
     "fiber":0,
-    "image":"/9j/4AAQSkZJRgABAQAAA..."
+    "image":""
 }
 ```
 
