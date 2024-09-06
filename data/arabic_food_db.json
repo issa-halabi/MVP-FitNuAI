@@ -343,5 +343,14 @@
     "fats": 17.8,
     "calories": 309.0,
     "fiber": 2
+  },
+  {
+    "food": "Salad",
+    "weight": 100,
+    "carbs": 3.2,
+    "proteins": 1.52,
+    "fats": 0.24,
+    "calories": 17.0,
+    "fiber": 2.0
   }
 ]

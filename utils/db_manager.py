@@ -8,8 +8,9 @@ def get_data_for_gpt() -> pd.DataFrame:
     """
     df1 = pd.read_json('./data/arabic_food_db.json', dtype_backend='numpy_nullable')
     df2 = pd.read_json('./data/fruit_db.json', dtype_backend='numpy_nullable')
-    df = pd.concat([df1, df2], ignore_index=True)
-    df['food'] = df['food'].apply(lambda x: x.lower())
+    df3 = pd.read_json('./data/basics.json', dtype_backend='numpy_nullable')
+    df = pd.concat([df1, df2, df3], ignore_index=True)
+    df['food'] = df['food'].apply(lambda x: x.lower().replace(',', ''))
     return df
 
 

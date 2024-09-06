@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from utils.db_manager import get_food_info, get_unique_dishes, get_all_data, get_data_for_gpt, search_foods, get_food_image_base64
 from utils.model import GPT_DishAnalyzer
-from utils.barcode_scanner import parse_barcode_image_base64, get_nutrition_facts, ScannerException
+from utils.barcode_scanner import get_nutrition_facts
 
 
 app = FastAPI()
@@ -31,26 +31,25 @@ async def get_nutrifacts_from_image(request: ImageRequest):
         # decode the image
         image_data = request.image_base64
         # ask model to recognize the food in image
-        food_name = model.predict_from_base64(image_data)
-        if food_name == 'Unknown':
+        food_names = model.predict_from_base64(image_data)
+        if food_names == 'Unknown':
             raise KeyError('Unknown or Unrecognized food')
-        food_info = get_food_info(food_name, data_for_gpt)
-        food_info['image'] = get_food_image_base64(food_name)
-        return food_info
+        response = []
+        for food_name in food_names:
+            food_info = get_food_info(food_name, data_for_gpt)
+            food_info['image'] = get_food_image_base64(food_name)
+            response.append(food_info)
+        return response
     except KeyError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
 
-@app.post('/barcode_image/')
-async def get_nutrifacts_from_barcode(request: ImageRequest):
+@app.get('/barcode/{code}')
+async def get_nutrifacts_from_barcode(code: str):
     try:
-        image_data = request.image_base64
-        code = parse_barcode_image_base64(image_data)
         food_info = get_nutrition_facts(code)
         return food_info
-    except ScannerException as e:
-        raise HTTPException(status_code=400, detail=str(e))
     except KeyError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:

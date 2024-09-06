@@ -9,8 +9,10 @@ from openai.types.chat import ChatCompletion
 
 load_dotenv()
 QUERY = '''You are a arabic-food analyzer bot created by DishAnalyzer.
-When the user sends a photo, you must send the name of the food in the photo. You must send one of those types in one line (be sure to write it in exact way):
+When the user sends a photo, you must send the names of the foods in the photo, seperated by commas. Be sure to write it each item name in the same exact way as in this list:
 
+Some of the food items are main dishes, some of them are side dishes, some of them are desserts, some of them are drinks, fruits, vegetables, etc.
+Here is the list of the food items:
 {}
 
 '''
@@ -60,9 +62,10 @@ class GPT_DishAnalyzer():
         # get the text from the first answer of the model
         answer = response.choices[0]
         text = answer.message.content.strip()
-        if text in self.labels:
-            return text
-        return 'Unknown'
+        items = [item.strip() for item in text.split(',') if item.strip() in self.labels]
+        if len(items) == 0:
+            return 'Unknown'
+        return items
 
 
 if __name__ == '__main__':

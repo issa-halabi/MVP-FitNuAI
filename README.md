@@ -18,14 +18,28 @@ GET /food_name/apple
 Example Response:
 ```
 {
-    "food":"apple",
-    "weight":100,
-    "calories":279,
-    "carbs":70,
-    "fat":0,
-    "protein":0,
-    "fiber":0,
-    "image":""
+    "search_results":[
+        {
+            "food":"batata mahchi",
+            "weight":100,
+            "calories":279,
+            "carbs":70,
+            "fat":0,
+            "protein":0,
+            "fiber":0,
+            "image":""
+        },
+        {
+            "food":"banana",
+            "weight":100,
+            "calories":279,
+            "carbs":70,
+            "fat":0,
+            "protein":0,
+            "fiber":0,
+            "image":""
+        }
+    ]
 }
 ```
 
@@ -36,7 +50,9 @@ Example Response:
 - Request Body:
     - image_base64 string, base64-encoded image of a single type of food
 - Responses:
-    - 200 OK: returns the nutritional information of the food recognized in the given image
+    - 200 OK: returns the nutritional information of the foods recognized in the given image along with their images
+    - 404 Not Found:
+        - Unknown or Unrecognized food
 - Example Request:
 ```
 {
@@ -44,26 +60,42 @@ Example Response:
 }
 ```
 
-**3. Get nutrition facts by barcode image:**
-- Endpoint path: "/barcode_image/"
-- Method: POST
-- Request Body:
-    - image_base64 string, base64-encoded image
+Example Response:
+```
+[
+    {
+        "food":"apple",
+        "weight":100,
+        "calories":279,
+        "carbs":70,
+        "fat":0,
+        "protein":0,
+        "fiber":0,
+        "image":""
+    },
+    {
+        "food":"banana",
+        "weight":100,
+        ...
+    },
+    ...
+]
+```
+
+**3. Get nutrition facts by barcode:**
+- Endpoint path: "/barcode/{code}"
+- Method: GET
+- Parameters: code string passed as path parameter
 - Responses:
-    - 200 OK: Returns the nutritional information of the product with the given barcode.
-    - 400 Bad Request:
-        - Barcode not detected or your barcode is blank/corrupted!
-        - Barcode contains no data!
+    - 200 OK: Returns the nutritional information of the product with the given barcode along with its image.
     - 404 Not Found:
         - Product not found in database.
 - Example Request:
 ```
-{
-    image_base64: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAk..."
-}
+GET /barcode/123456789012
 ```
 
-**Example Response**
+Example Response:
 ```
 {
     "food":"jelly",
@@ -72,7 +104,8 @@ Example Response:
     "carbs":70,
     "fat":0,
     "protein":0,
-    "fiber":0
+    "fiber":0,
+    "image": ""
 }
 ```
 
@@ -124,6 +157,11 @@ git lfs install
 git lfs fetch
 
 git lfs checkout
+```
+
+Install necessary libraries
+```
+pip install -r requirements.txt
 ```
 
 Create .env file, and write inside it your OPENAI_APIKEY there:
