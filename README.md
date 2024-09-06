@@ -50,9 +50,7 @@ Example Response:
 - Request Body:
     - image_base64 string, base64-encoded image of a single type of food
 - Responses:
-    - 200 OK: returns the nutritional information of the foods recognized in the given image along with their images
-    - 404 Not Found:
-        - Unknown or Unrecognized food
+    - 200 OK: returns the nutritional information of the food recognized in the given image along with its image, and a boolean indicating if nutrifacts were based on the model or the database
 - Example Request:
 ```
 {
@@ -62,24 +60,17 @@ Example Response:
 
 Example Response:
 ```
-[
-    {
-        "food":"apple",
-        "weight":100,
-        "calories":279,
-        "carbs":70,
-        "fat":0,
-        "protein":0,
-        "fiber":0,
-        "image":""
-    },
-    {
-        "food":"banana",
-        "weight":100,
-        ...
-    },
-    ...
-]
+{
+    "food":"apple",
+    "weight":100,
+    "calories":279,
+    "carbs":70,
+    "fat":0,
+    "protein":0,
+    "fiber":0,
+    "image":"",
+    "gpt_based": false
+}
 ```
 
 **3. Get nutrition facts by barcode:**
@@ -148,22 +139,6 @@ It uses 2 additional files, for html & css
 
 
 ## Usage (docker)
-Install & Use git LFS
-```
-brew install git-lfs
-
-git lfs install
-
-git lfs fetch
-
-git lfs checkout
-```
-
-Install necessary libraries
-```
-pip install -r requirements.txt
-```
-
 Create .env file, and write inside it your OPENAI_APIKEY there:
 ```
 OPENAI_API_KEY="your_api_key"

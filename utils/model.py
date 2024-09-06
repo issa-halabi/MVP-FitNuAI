@@ -7,13 +7,36 @@ from openai import OpenAI
 from openai.types.chat import ChatCompletion
 
 
+from pydantic import BaseModel, Field
+class FoodItem(BaseModel):
+    food: str = Field(description="The name of the food item")
+    weight: int = Field(description="The standard serving size, weight of the food item in grams, other nutrifacts are per 100 grams")
+    calories: float = Field(description="The number of calories in the food item per 100 grams")
+    carbs: float = Field(description="The number of carbs in the food item per 100 grams")
+    fiber: float = Field(description="The number of fiber in the food item per 100 grams")
+    fats: float = Field(description="The number of fats in the food item per 100 grams")
+    proteins: float = Field(description="The number of proteins in the food item per 100 grams")
+
+
 load_dotenv()
 QUERY = '''You are a arabic-food analyzer bot created by DishAnalyzer.
-When the user sends a photo, you must send the names of the foods in the photo, seperated by commas. Be sure to write it each item name in the same exact way as in this list:
+When the user sends a photo, you must send the name of the food (dish or item) in the photo.
+If the image contains multiple items, choose the main one.
 
+Your final output must be one item, which is a dictionary with the following keys:
+- food: The name of the food item
+- weight: Always 100, representing the standard serving size of the food item in grams
+- calories: The number of calories in the food item per 100 grams
+- carbs: The number of carbs in the food item per 100 grams
+- fiber: The number of fiber in the food item per 100 grams
+- fats: The number of fats in the food item per 100 grams
+- proteins: The number of proteins in the food item per 100 grams
+
+
+If the item exists in the list of defined food items, it must be written in the same exact way as in this list below.
 Some of the food items are main dishes, some of them are side dishes, some of them are desserts, some of them are drinks, fruits, vegetables, etc.
-Here is the list of the food items:
-{}
+Here is the list of the defined food items:
+{labels}
 
 '''
 
@@ -23,12 +46,12 @@ class GPT_DishAnalyzer():
         self.client = OpenAI(api_key=api_key)
         # add labels to query
         self.labels = labels
-        self.query = QUERY.format(', '.join(labels))
+        self.query = QUERY.format(labels=', '.join(labels))
 
     def predict_from_base64(self, image_base64: str) -> str:
         query = self.query
-        response = self.client.chat.completions.create(
-            model="gpt-4o-mini",
+        response = self.client.beta.chat.completions.parse(
+            model="gpt-4o-2024-08-06",
             messages=[{
                 "role": "user",
                 "content": [
@@ -44,7 +67,7 @@ class GPT_DishAnalyzer():
                     },
                 ],
             }],
-            max_tokens=300,
+            response_format=FoodItem,
         )
         decoded_output = self._decode_output(response)
         return decoded_output
@@ -60,12 +83,8 @@ class GPT_DishAnalyzer():
 
     def _decode_output(self, response: ChatCompletion) -> str:
         # get the text from the first answer of the model
-        answer = response.choices[0]
-        text = answer.message.content.strip()
-        items = [item.strip() for item in text.split(',') if item.strip() in self.labels]
-        if len(items) == 0:
-            return 'Unknown'
-        return items
+        parsed_result = response.choices[0].message.parsed
+        return parsed_result
 
 
 if __name__ == '__main__':
